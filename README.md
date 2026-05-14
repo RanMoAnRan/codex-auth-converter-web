@@ -12,15 +12,17 @@
 
 Codex Auth Converter Web 可以在浏览器里完成 CPA Codex auth JSON 与 sub2api 导出 JSON 的互转，适合批量整理、迁移或备份 Codex 账号认证文件。
 
-主要支持两个方向：
+主要支持三个方向：
 
 - **CPA → sub2api**：把多个 CPA JSON 合并为一个 sub2api 可导入 JSON。
 - **sub2api → CPA**：把一个或多个 sub2api 导出 JSON 拆分为多个 CPA Codex JSON，并打包成 ZIP。
+- **sub2api 合并**：把多个单账号或多账号 sub2api JSON / ZIP 合并成一个大的 sub2api JSON。
 
 ## 功能特性
 
 - CPA JSON 批量合并为 sub2api 导出文件
 - sub2api 导出文件批量拆分为 CPA Codex 文件
+- 多个 sub2api 导出文件批量合并为一个大 JSON
 - 支持 `.json` 和 `.zip` 上传
 - ZIP 内递归读取 JSON 文件
 - 文件选择支持追加、去重、单个移除、展开/收起
@@ -106,6 +108,31 @@ accounts-cpa.zip
 cpa-auth-out-20260510-1030-cpa.zip
 ```
 
+### sub2api 合并
+
+1. 打开页面，选择 `sub2api 合并`。
+2. 上传多个 sub2api JSON，或上传包含 sub2api JSON 的 ZIP。
+3. 点击 `开始合并并下载`。
+4. 页面会自动下载合并后的 sub2api JSON。
+5. 合并时会把所有 `accounts` 展平到一个数组里，并按账号标识自动去重。
+
+输出文件名会根据输入文件自动生成，例如：
+
+```text
+accounts-sub2api.json
+merged-sub2api-accounts-20260514-1030-sub2api.json
+```
+
+去重优先级：
+
+```text
+credentials.email
+credentials.chatgpt_user_id / chatgpt_account_id / account_id
+credentials.refresh_token
+credentials.access_token
+name
+```
+
 ## CPA → sub2api 高级设置
 
 | 配置 | 默认值 | 说明 |
@@ -155,6 +182,20 @@ sub2api → CPA 支持以下结构：
   - `records`
 - 顶层对象本身就是单个账号对象
 
+### sub2api 合并输入
+
+合并功能支持标准 sub2api 导出结构：
+
+```json
+{
+  "exported_at": "2026-05-13T19:48:36.503Z",
+  "proxies": [],
+  "accounts": []
+}
+```
+
+也兼容 `accounts/data/items/list/records` 等列表字段，以及单个账号对象。
+
 ## 跳过规则
 
 文件或账号会在以下情况被跳过：
@@ -198,6 +239,7 @@ src/
     converters/
       common.ts
       cpa-to-sub2api.ts
+      merge-sub2api.ts
       sub2api-to-cpa.ts
     download.ts
     naming.ts

@@ -1,6 +1,7 @@
-import { ArrowRightLeftIcon, FileArchiveIcon, FileJson2Icon, LockKeyholeIcon, ShieldCheckIcon, SparklesIcon } from "lucide-react"
+import { ArrowRightLeftIcon, CombineIcon, FileArchiveIcon, FileJson2Icon, LockKeyholeIcon, ShieldCheckIcon, SparklesIcon } from "lucide-react"
 
 import { CpaToSub2ApiPanel } from "@/components/converter/CpaToSub2ApiPanel"
+import { MergeSub2ApiPanel } from "@/components/converter/MergeSub2ApiPanel"
 import { Sub2ApiToCpaPanel } from "@/components/converter/Sub2ApiToCpaPanel"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -23,7 +24,7 @@ function App() {
                     <SparklesIcon data-icon="inline-start" />
                     本地浏览器转换
                   </Badge>
-                  <Badge variant="secondary" className="rounded-full px-3 py-1">CPA ↔ sub2api</Badge>
+                  <Badge variant="secondary" className="rounded-full px-3 py-1">CPA ↔ sub2api · 合并</Badge>
                 </div>
                 <div className="flex flex-col gap-2">
                   <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
@@ -37,13 +38,13 @@ function App() {
               <div className="grid gap-3 sm:grid-cols-3">
                 <Feature icon={ShieldCheckIcon} title="不上传" desc="token 本地解析" />
                 <Feature icon={ArrowRightLeftIcon} title="双向互转" desc="JSON / ZIP 导入" />
-                <Feature icon={FileJson2Icon} title="快速导出" desc="下载 JSON / ZIP" />
+                <Feature icon={CombineIcon} title="批量合并" desc="多份 sub2api 汇总" />
               </div>
             </div>
           </header>
 
           <Tabs defaultValue="cpa-to-sub2api" className="flex flex-col gap-4">
-            <TabsList className="grid h-auto w-full grid-cols-1 gap-2 rounded-3xl border bg-card/75 p-2 shadow-lg shadow-primary/5 backdrop-blur group-data-[orientation=horizontal]/tabs:h-auto sm:grid-cols-2">
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-2 rounded-3xl border bg-card/75 p-2 shadow-lg shadow-primary/5 backdrop-blur group-data-[orientation=horizontal]/tabs:h-auto sm:grid-cols-3">
               <TabsTrigger
                 value="cpa-to-sub2api"
                 className="group h-auto min-h-[76px] justify-start overflow-visible rounded-2xl border border-transparent bg-transparent px-4 py-3 text-left transition-all after:hidden hover:border-border hover:bg-background/70 hover:shadow-sm data-[state=active]:border-primary/15 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/15"
@@ -72,12 +73,29 @@ function App() {
                   </span>
                 </span>
               </TabsTrigger>
+              <TabsTrigger
+                value="merge-sub2api"
+                className="group h-auto min-h-[76px] justify-start overflow-visible rounded-2xl border border-transparent bg-transparent px-4 py-3 text-left transition-all after:hidden hover:border-border hover:bg-background/70 hover:shadow-sm data-[state=active]:border-primary/15 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/15"
+              >
+                <span className="flex w-full items-center gap-3">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-data-[state=active]:bg-primary-foreground/15 group-data-[state=active]:text-primary-foreground">
+                    <CombineIcon />
+                  </span>
+                  <span className="flex min-w-0 flex-col gap-1">
+                    <span className="text-base font-semibold leading-none sm:text-lg">sub2api 合并</span>
+                    <span className="text-xs font-normal text-muted-foreground group-data-[state=active]:text-primary-foreground/75 sm:text-sm">多份导出合成一个大 JSON</span>
+                  </span>
+                </span>
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="cpa-to-sub2api" className="m-0">
               <CpaToSub2ApiPanel />
             </TabsContent>
             <TabsContent value="sub2api-to-cpa" className="m-0">
               <Sub2ApiToCpaPanel />
+            </TabsContent>
+            <TabsContent value="merge-sub2api" className="m-0">
+              <MergeSub2ApiPanel />
             </TabsContent>
           </Tabs>
         </section>
